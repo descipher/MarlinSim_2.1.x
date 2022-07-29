@@ -15,18 +15,16 @@ KinematicSystem::KinematicSystem(std::function<void(glm::vec4)> on_kinematic_upd
   steppers.push_back(add_component<StepperDriver>("Stepper2", Z_ENABLE_PIN, Z_DIR_PIN, Z_STEP_PIN, [this](){ this->kinematic_update(); }));
   steppers.push_back(add_component<StepperDriver>("Stepper3", E0_ENABLE_PIN, E0_DIR_PIN, E0_STEP_PIN, [this](){ this->kinematic_update(); }));
 
-  srand(time(0));
-  origin.x = (rand() % (int)(X_MAX_POS - X_MIN_POS)) + X_MIN_POS;
-  origin.y = (rand() % (int)(Y_MAX_POS - Y_MIN_POS)) + Y_MIN_POS;
-  origin.z = (rand() % (int)(Z_MAX_POS - Z_MIN_POS)) + Z_MIN_POS;
+
+  origin = { X_MIN_POS, Y_MIN_POS, Z_MIN_POS };
 }
 
 void KinematicSystem::kinematic_update() {
   stepper_position = glm::vec4{
-    std::static_pointer_cast<StepperDriver>(steppers[0])->steps() / steps_per_unit[0] * (((INVERT_X_DIR * 2) - 1) * -1.0),
-    std::static_pointer_cast<StepperDriver>(steppers[1])->steps() / steps_per_unit[1] * (((INVERT_Y_DIR * 2) - 1) * -1.0),
-    std::static_pointer_cast<StepperDriver>(steppers[2])->steps() / steps_per_unit[2] * (((INVERT_Z_DIR * 2) - 1) * -1.0),
-    std::static_pointer_cast<StepperDriver>(steppers[3])->steps() / steps_per_unit[3] * (((INVERT_E0_DIR * 2) - 1) * -1.0)
+    std::static_pointer_cast<StepperDriver>(steppers[0])->steps() / steps_per_unit[0] * (INVERT_X_DIR ? -1 : 1),
+    std::static_pointer_cast<StepperDriver>(steppers[1])->steps() / steps_per_unit[1] * (INVERT_Y_DIR ? -1 : 1),
+    std::static_pointer_cast<StepperDriver>(steppers[2])->steps() / steps_per_unit[2] * (INVERT_Z_DIR ? -1 : 1),
+    std::static_pointer_cast<StepperDriver>(steppers[3])->steps() / steps_per_unit[3] * (INVERT_E0_DIR ? -1 : 1)
   };
 
   effector_position = glm::vec4(origin, 0.0f) + stepper_position;

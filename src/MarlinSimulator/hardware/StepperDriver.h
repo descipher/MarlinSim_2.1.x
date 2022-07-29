@@ -20,7 +20,7 @@ public:
 
   void interrupt(GpioEvent& ev) {
     if (ev.pin_id == step && ev.event == ev.RISE && Gpio::get_pin_value(enable) == 0) {
-      step_count += ((Gpio::get_pin_value(dir) * 2) - 1);
+      step_count += Gpio::get_pin_value(dir) ? 1 : -1;
       step_callback();
     }
   }
