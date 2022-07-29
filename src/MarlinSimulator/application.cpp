@@ -7,6 +7,9 @@
 
 #include "../HAL.h"
 #include <src/MarlinCore.h>
+#include <src/module/motion.h>
+#include <src/module/planner.h>
+#include <src/module/stepper.h>
 #include <src/pins/pinsDebug.h>
 #include <fstream>
 #include <vcd_writer.h>
@@ -72,6 +75,13 @@ Application::Application() {
       ImGui::SameLine();
       ImGui::Text("%s", p.name);
     }
+  });
+
+  user_interface.addElement<UiWindow>("Marlin Internals", [this](UiWindow* window){
+    abce_pos_t pos = planner.get_axis_positions_mm();
+    ImGui::Text("Planner X pos: %f", pos.x);
+    ImGui::Text("Planner Y pos: %f", pos.y);
+    ImGui::Text("Planner Z pos: %f", pos.z);
   });
 
   user_interface.addElement<UiWindow>("Signal Analyser", [this](UiWindow* window){
