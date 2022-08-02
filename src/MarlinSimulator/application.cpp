@@ -82,6 +82,7 @@ Application::Application() {
     ImGui::Text("Planner X pos: %f", pos.x);
     ImGui::Text("Planner Y pos: %f", pos.y);
     ImGui::Text("Planner Z pos: %f", pos.z);
+    ImGui::Text("Planner E pos: %f", pos.e);
   });
 
   user_interface.addElement<UiWindow>("Signal Analyser", [this](UiWindow* window){

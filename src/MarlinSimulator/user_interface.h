@@ -73,6 +73,12 @@ Size=277,720
 Collapsed=0
 DockId=0x00000006,1
 
+[Window][Marlin Internals]
+Pos=1003,0
+Size=277,720
+Collapsed=0
+DockId=0x00000006,2
+
 [Window][Serial Monitor(0)]
 Pos=315,484
 Size=686,236
