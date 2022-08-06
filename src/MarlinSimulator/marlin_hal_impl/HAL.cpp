@@ -24,6 +24,10 @@
 #include <src/inc/MarlinConfig.h>
 #include <src/HAL/shared/Delay.h>
 
+typedef void (*pwmCallback_t)(void);
+void pwm_attach_callback(pwmCallback_t cb);
+extern volatile uint32_t pwm_uptime_micros;
+
 MSerialT serial_stream_0(false);
 MSerialT serial_stream_1(false);
 MSerialT serial_stream_2(false);
@@ -87,6 +91,19 @@ void systick_attach_callback(systickCallback_t cb) { systick_user_callback = cb;
 void SYSTICK_IRQHandler() {
   systick_uptime_millis++;
   if (systick_user_callback) systick_user_callback();
+}
+
+volatile uint32_t pwm_uptime_micros = 0;
+pwmCallback_t pwm_user_callback;
+void pwm_attach_callback(pwmCallback_t cb) { pwm_user_callback = cb; }
+void PWM_IRQHandler() {
+  pwm_uptime_micros++;
+  if (pwm_user_callback) pwm_user_callback();
+}
+
+
+int8_t MarlinHAL::set_pwm_frequency(const pin_t pin, const uint32_t f_desired) {
+  uint32_t pwm_cycle_ticks = 1000000UL / f_desired / 4; // # of 4µs ticks per full PWM cycle
 }
 
 #endif // __PLAT_NATIVE_SIM__

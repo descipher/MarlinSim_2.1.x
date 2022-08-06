@@ -4,6 +4,7 @@
 #include "hardware/StepperDriver.h"
 #include "hardware/EndStop.h"
 #include "hardware/Heater.h"
+#include "hardware/Laser.h"
 #include "hardware/print_bed.h"
 #include "hardware/print_bed.h"
 #include "hardware/bed_probe.h"
@@ -61,6 +62,10 @@ void VirtualPrinter::build() {
 
   #if HAS_BED_PROBE
     root->add_component<BedProbe>("Probe", Z_MIN_PROBE_PIN, glm::vec3 NOZZLE_TO_PROBE_OFFSET, kinematics->effector_position, *print_bed);
+  #endif
+
+  #if ENABLED(LASER_FEATURE)
+    root->add_component<Laser>("Laser", SPINDLE_LASER_PWM_PIN, pwm_data{});
   #endif
 
   root->add_component<Heater>("Hotend Heater", HEATER_0_PIN, TEMP_0_PIN, heater_data{12, 3.6}, hotend_data{13, 20, 0.897}, adc_data{4700, 12});

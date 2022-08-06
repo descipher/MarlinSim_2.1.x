@@ -44,6 +44,12 @@ void simulation_main() {
   Kernel::Timers::timerEnable(3);
   Kernel::is_initialized(true);
 
+    // Marlin Loop 500hz
+  Kernel::Timers::timerInit(4, 1000000);
+  Kernel::Timers::timerStart(4, 2500);
+  Kernel::Timers::timerEnable(4);
+
+
   while(!main_finished) {
     try {
       Kernel::execute_loop();
